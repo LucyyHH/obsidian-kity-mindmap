@@ -1071,6 +1071,9 @@ var Je = `
 \`\`\`
 %%
 `,
+  Km = `
+{"root":{"data":{"id":"ckwmybffkjs0","created":1655898287199,"text":"MainTopic"},"children":[]},"template":"right","theme":"fresh-blue-compat","version":"1.4.43"}
+`,
   Ke =
     '<svg t="1647098492652" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2505"><path d="M547.84 509.952v182.528a104.768 104.768 0 1 1-69.76 0V509.952L295.04 578.688c-13.44 5.056-26.304 23.68-26.304 38.016v75.776a104.768 104.768 0 1 1-69.824 0V616.704c0-43.52 30.912-88.128 71.616-103.36L478.08 435.392V331.52a104.768 104.768 0 1 1 69.76 0v103.872l207.68 77.952c40.64 15.232 71.68 59.968 71.68 103.36v75.776a104.768 104.768 0 1 1-69.888 0V616.704c0-14.336-12.928-33.024-26.304-38.016L547.84 509.952z m245.952 246.4a35.52 35.52 0 0 1-3.008 0 34.944 34.944 0 0 0 1.536 69.824v0.064a34.944 34.944 0 0 0 1.472-69.824z m-561.152 0a34.944 34.944 0 0 0 1.088 69.824v0.064a34.944 34.944 0 1 0 1.088-69.888h-2.176z m280.32-488.704a34.944 34.944 0 1 0 0-69.632 34.944 34.944 0 0 0 0 69.504v0.128z m0 558.592a34.944 34.944 0 1 0 0-69.76 34.944 34.944 0 0 0 0 69.696v0.064z" p-id="2506" fill="currentColor"></path></svg>',
   ee = "km.svg",
@@ -1234,27 +1237,7 @@ var Fn = /\s*# JSON[\n\r]+((?:.|[\n\r])*)/m,
       return (
         (this.links = this.parseLink(this.kityJSON)),
         `
-%%
-# JSON
-
 ${JSON.stringify(this.kityJSON)}
-%%
-
-%%
-# SVG
-\`\`\` html
-${this.kitySvgStr}
-\`\`\`
-%%
-
-%%
-# LINK
-
-${this.links.map((e) => `[[${e}]]`).join(`
-`)}
-
-%%
-
 `
       );
     }
@@ -1717,6 +1700,24 @@ var sn = B(require("events")),
                   r
                 );
             });
+          }),
+        new de.Setting(e)
+          .setName(
+            "\u4f7f\u7528KM\u6269\u5c55\u540d"
+          )
+          .setDesc(
+            "\u662f\u5426\u5728\u521b\u5efa\u6587\u4ef6\u65f6\u4f7f\u7528KM\u6269\u5c55\u540d"
+          )
+          .addToggle((n) => {
+            n.setValue(
+              this.plugin.settings.USE_KM_FILE_EXTENSION
+            ).onChange(async (r) => {
+              (this.plugin.settings.USE_KM_FILE_EXTENSION = r),
+                await this.updateSetting(
+                  "USE_KM_FILE_EXTENSION",
+                  r
+                );
+            });
           });
     }
     dispose() {
@@ -1983,10 +1984,14 @@ var Ue = (0, mn.default)("kity:plugin"),
         this.app.fileManager.getNewFileParent("").path;
       (await this.app.vault.adapter.exists(r)) ||
         (await this.app.vault.createFolder(r));
-      let i = await this.app.vault.create(
-        hn.join(r, `${(0, gn.default)().format("YYYYMMDDHHmmss")}.km.md`),
-        Je
-      );
+      let i = this.settings.USE_KM_FILE_EXTENSION == 0
+        ? await this.app.vault.create(
+          hn.join(r, `${(0, gn.default)().format("YYYYMMDDHHmmss")}.km.md`),
+          Je
+        ) : await this.app.vault.create(
+          hn.join(r, `${(0, gn.default)().format("YYYYMMDDHHmmss")}.km`),
+          Km
+        );
       return e
         ? Promise.resolve({
             file: i,
