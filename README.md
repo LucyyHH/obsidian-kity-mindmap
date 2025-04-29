@@ -1,4 +1,4 @@
-# obsidian-kity-mind
+# obsidian-kity-mindmap-km
 
 推荐使用[brat](https://github.com/TfTHacker/obsidian42-brat)安装
 

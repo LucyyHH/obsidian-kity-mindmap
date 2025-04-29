@@ -1,0 +1,45 @@
+name: Build Release
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build:
+    runs-on: obsidian-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Get version
+        id: get_version
+        run: |
+          VERSION=$(grep '"version"' manifest.json | cut -d '"' -f 4)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          
+      - name: Create release directory structure
+        run: |
+          mkdir -p Assets/obsidian-kity-mindmap-km
+          cp manifest.json Assets/obsidian-kity-mindmap-km/
+          cp main.js Assets/obsidian-kity-mindmap-km/
+      
+      - name: Create zip file
+        run: |
+          cd Assets
+          zip -r obsidian-kity-mindmap-km-${{ env.VERSION }}.zip obsidian-kity-mindmap-km
+          mv obsidian-kity-mindmap-km-${{ env.VERSION }}.zip ../
+          cd ..
+      
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            obsidian-kity-mindmap-km-${{ env.VERSION }}.zip
+            main.js
+            manifest.json
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

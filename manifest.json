@@ -1,8 +1,8 @@
 {
-	"id": "kity-mindmap",
-	"name": "Kity Mindmap",
-	"description": "百度脑图",
+	"id": "kity-mindmap-km",
+	"name": "Kity Mindmap KM",
+	"description": "百度脑图，直接创建KM文件",
 	"author": "LucyyHH",
 	"minAppVersion": "1.0.0",
-	"version": "2.1.4"
+	"version": "2.1.3.1"
 }
